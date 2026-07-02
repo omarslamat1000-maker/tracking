@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>منظومة متابعة مهام البنية التحتية</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div id="toastHost" class="toast-host" aria-live="polite"></div>
+
+  <section id="loginView" class="login-view">
+    <div class="login-brand">
+      <div class="mark" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <p class="eyebrow">أمانة منطقة المدينة المنورة</p>
+      <h1>منظومة متابعة مهام البنية التحتية</h1>
+      <p>متابعة تنفيذية للمهام والاجتماعات والجهات مع حفظ محلي تلقائي ونسخ احتياطي قابل للاستعادة.</p>
+    </div>
+    <form id="loginForm" class="login-panel">
+      <h2>تسجيل الدخول</h2>
+      <label>
+        <span>اسم المستخدم</span>
+        <input id="loginUsername" autocomplete="username" required>
+      </label>
+      <label>
+        <span>كلمة المرور</span>
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+      </label>
+      <p id="loginError" class="form-error" hidden></p>
+      <button class="primary-action" type="submit">دخول</button>
+      <small>بيانات المدير الافتراضية للتجربة: admin / ChangeMe@123</small>
+    </form>
+  </section>
+
+  <section id="appView" class="app-view" hidden>
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="mark small" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div>
+          <strong>متابعة المهام</strong>
+          <span>البنية التحتية</span>
+        </div>
+      </div>
+      <nav id="mainNav" class="main-nav"></nav>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p id="pageKicker">لوحة التحكم</p>
+          <h2 id="pageTitle">لوحة التحكم التنفيذية</h2>
+        </div>
+        <div class="topbar-tools">
+          <div id="saveIndicator" class="save-indicator">قاعدة البيانات متصلة</div>
+          <div id="recordCounter" class="record-counter">0 سجل</div>
+          <div class="user-chip">
+            <span id="currentUserName"></span>
+            <button id="logoutBtn" class="ghost-action" type="button">خروج</button>
+          </div>
+        </div>
+      </header>
+
+      <section id="dashboardSection" class="view-section">
+        <div id="kpiGrid" class="kpi-grid"></div>
+        <div class="content-band dashboard-filters">
+          <div class="dashboard-filter-head">
+            <h3>فلاتر لوحة التحكم</h3>
+            <button id="resetDashboardFiltersBtn" type="button">إعادة ضبط</button>
+          </div>
+          <div class="dashboard-filters-grid">
+            <label>
+              <span>الجهة</span>
+              <select id="dashboardFilterEntity"></select>
+            </label>
+            <label>
+              <span>المسؤول</span>
+              <select id="dashboardFilterResponsible"></select>
+            </label>
+            <label>
+              <span>الحالة</span>
+              <select id="dashboardFilterStatus"></select>
+            </label>
+            <label>
+              <span>حالة التصعيد</span>
+              <select id="dashboardFilterEscalation">
+                <option value="">كل حالات التصعيد</option>
+                <option value="مصعد">مصعد</option>
+                <option value="غير مصعد">غير مصعد</option>
+              </select>
+            </label>
+            <label>
+              <span>من تاريخ اجتماع</span>
+              <input id="dashboardFilterDateFrom" type="date">
+            </label>
+            <label>
+              <span>إلى تاريخ اجتماع</span>
+              <input id="dashboardFilterDateTo" type="date">
+            </label>
+          </div>
+        </div>
+        <div class="content-band executive-band">
+          <div>
+            <h3>الملخص التنفيذي</h3>
+            <p id="executiveSummary"></p>
+          </div>
+        </div>
+        <div class="charts-grid">
+          <article><h3>توزيع المهام حسب الحالة</h3><canvas id="statusChart"></canvas></article>
+          <article><h3>المهام حسب الجهة</h3><canvas id="entityChart"></canvas></article>
+          <article><h3>المهام حسب المسؤول</h3><canvas id="ownerChart"></canvas></article>
+          <article><h3>تطور المهام زمنياً</h3><canvas id="timelineChart"></canvas></article>
+          <article><h3>مكتمل مقابل متبقي</h3><canvas id="doneChart"></canvas></article>
+          <article><h3>بنود التصعيد حسب الجهة</h3><canvas id="escalationChart"></canvas></article>
+        </div>
+      </section>
+
+      <section id="tasksSection" class="view-section" hidden>
+        <div class="toolbar">
+          <div class="filters-grid">
+            <input id="taskSearch" placeholder="بحث عام">
+            <select id="filterEntity"></select>
+            <select id="filterResponsible"></select>
+            <select id="filterStatus"></select>
+            <select id="filterMeeting"></select>
+            <input id="filterMeetingDate" type="date">
+            <select id="filterEscalation">
+              <option value="">كل حالات التصعيد</option>
+              <option value="مصعد">مصعد</option>
+              <option value="غير مصعد">غير مصعد</option>
+            </select>
+            <select id="filterPriority">
+              <option value="">كل الأولويات</option>
+              <option>عالية</option>
+              <option>متوسطة</option>
+              <option>منخفضة</option>
+            </select>
+          </div>
+          <div class="toolbar-actions">
+            <button id="addTaskBtn" class="primary-action" type="button">إضافة مهمة</button>
+            <button id="exportFilteredBtn" type="button">تصدير Excel</button>
+            <button id="resetFiltersBtn" type="button">إعادة ضبط</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>رقم</th><th>محضر الاجتماع</th><th>تاريخ الاجتماع</th><th>جهة الاجتماع</th>
+                <th>المهمة المسندة</th><th>المسؤول</th><th>الحالة</th><th>نسبة الإنجاز</th>
+                <th>حالة التصعيد</th><th>الإفادة</th><th>آخر تحديث</th><th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="tasksTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="meetingsSection" class="view-section" hidden>
+        <div id="meetingsList" class="list-grid"></div>
+      </section>
+
+      <section id="usersSection" class="view-section" hidden>
+        <div class="split-layout">
+          <form id="userForm" class="editor-panel">
+            <h3>إضافة / تعديل مستخدم</h3>
+            <input name="id" type="hidden">
+            <label><span>الاسم</span><input name="name" required></label>
+            <label><span>اسم المستخدم</span><input name="username" required></label>
+            <label><span>كلمة المرور</span><input name="password" placeholder="اتركها فارغة عند عدم التغيير"></label>
+            <label><span>الدور</span><select name="role"><option>مدير النظام</option><option>مستخدم جهة</option></select></label>
+            <label><span>الجهات المرتبطة</span><select name="linkedEntities" multiple></select></label>
+            <label class="check-line"><input name="isActive" type="checkbox" checked><span>الحساب فعال</span></label>
+            <div id="permissionsBox" class="permissions-box"></div>
+            <button class="primary-action" type="submit">حفظ المستخدم</button>
+            <button id="resetUserForm" type="button">تفريغ النموذج</button>
+          </form>
+          <div id="usersList" class="list-grid"></div>
+        </div>
+      </section>
+
+      <section id="entitiesSection" class="view-section" hidden>
+        <div class="split-layout">
+          <form id="entityForm" class="editor-panel">
+            <h3>إضافة / تعديل جهة</h3>
+            <input name="id" type="hidden">
+            <label><span>اسم الجهة</span><input name="name" required></label>
+            <label><span>الوصف</span><textarea name="description"></textarea></label>
+            <label class="check-line"><input name="isActive" type="checkbox" checked><span>الجهة فعالة</span></label>
+            <button class="primary-action" type="submit">حفظ الجهة</button>
+            <button id="resetEntityForm" type="button">تفريغ النموذج</button>
+          </form>
+          <div id="entitiesList" class="list-grid"></div>
+        </div>
+      </section>
+
+      <section id="reportsSection" class="view-section" hidden>
+        <div id="reportsGrid" class="reports-grid"></div>
+      </section>
+
+      <section id="databaseSection" class="view-section" hidden>
+        <div class="database-grid">
+          <article class="editor-panel">
+            <h3>تحميل نسخة احتياطية كاملة</h3>
+            <p>تصدير جميع جداول IndexedDB إلى ملف JSON.</p>
+            <button id="backupBtn" class="primary-action" type="button">تحميل النسخة</button>
+          </article>
+          <article class="editor-panel">
+            <h3>ربط ملف Google Sheets</h3>
+            <p>الصق رابط Google Sheet هنا ليقرأ التطبيق البيانات ويحدثها تلقائيًا.</p>
+            <input id="googleSheetUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/..." autocomplete="off">
+            <button id="saveSheetUrlBtn" class="primary-action" type="button">حفظ الرابط</button>
+            <input id="googleSheetSyncUrl" type="url" placeholder="رابط مزامنة Google Apps Script (اختياري)" autocomplete="off">
+            <button id="saveSheetSyncUrlBtn" type="button">حفظ رابط المزامنة</button>
+            <button id="syncNowBtn" class="primary-action" type="button">مزامنة الآن</button>
+            <div id="googleSheetMessage" class="summary-box"></div>
+          </article>
+          <article class="editor-panel">
+            <h3>استعادة نسخة احتياطية</h3>
+            <input id="restoreFile" type="file" accept="application/json">
+            <div id="restoreSummary" class="summary-box"></div>
+            <button id="restoreBtn" type="button" disabled>استعادة البيانات</button>
+          </article>
+          <article class="editor-panel">
+            <h3>استيراد Excel</h3>
+            <input id="excelFile" type="file" accept=".xlsx,.xls">
+            <div id="importSummary" class="summary-box"></div>
+            <div class="import-options">
+              <label><input type="radio" name="importMode" value="new" checked> إضافة البيانات الجديدة فقط</label>
+              <label><input type="radio" name="importMode" value="update"> تحديث السجلات المتشابهة</label>
+              <label><input type="radio" name="importMode" value="replace"> استبدال قاعدة المهام</label>
+              <label><input type="radio" name="importMode" value="merge"> دمج البيانات</label>
+            </div>
+            <button id="importExcelBtn" type="button" disabled>تنفيذ الاستيراد</button>
+          </article>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <dialog id="taskDialog">
+    <form id="taskForm" method="dialog" class="dialog-form">
+      <header>
+        <h3 id="taskDialogTitle">إضافة مهمة</h3>
+        <button type="button" class="ghost-action" data-close-dialog>إغلاق</button>
+      </header>
+      <input name="id" type="hidden">
+      <div class="form-grid">
+        <label><span>محضر الاجتماع</span><input name="meetingTitle" required></label>
+        <label><span>تاريخ الاجتماع</span><input name="meetingDate" type="date" required></label>
+        <label><span>جهة الاجتماع</span><select name="entityId" required></select></label>
+        <label><span>رقم المهمة</span><input name="taskNumber" required></label>
+        <label class="wide"><span>المهمة المسندة</span><textarea name="title" required></textarea></label>
+        <label><span>المسؤول</span><input name="responsibleName"></label>
+        <label><span>الحالة</span><select name="status"></select></label>
+        <label><span>نسبة الإنجاز</span><input name="completionPercentage" type="number" min="0" max="100"></label>
+        <label><span>تاريخ الاستحقاق</span><input name="dueDate" type="date"></label>
+        <label><span>تاريخ المتابعة</span><input name="followupDate" type="date"></label>
+        <label><span>حالة التصعيد</span><select name="escalationStatus"><option>غير مصعد</option><option>مصعد</option></select></label>
+        <label><span>الأولوية</span><select name="priority"><option>متوسطة</option><option>عالية</option><option>منخفضة</option></select></label>
+        <label class="wide"><span>الإفادة</span><textarea name="feedback"></textarea></label>
+        <label class="wide"><span>ملاحظات</span><textarea name="notes"></textarea></label>
+      </div>
+      <footer>
+        <button class="primary-action" value="save">حفظ</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/db.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/google-sync.js"></script>
+  <script src="assets/js/tasks.js"></script>
+  <script src="assets/js/import-export.js"></script>
+  <script src="assets/js/users.js"></script>
+  <script src="assets/js/reports.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
